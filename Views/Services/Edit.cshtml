@@ -1,0 +1,77 @@
+﻿@using Humanizer
+@model AnnualHealthCheckJs.Models.Service
+
+@{
+    ViewData["Title"] = "Modify " + Model.Name.Humanize(LetterCasing.Title);
+}
+
+<h4 class="text-center">Modify @Model.Name.ToLower().Humanize(LetterCasing.Title)</h4>
+<hr />
+<div class="row">
+    <div class="offset-3 col-6">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID" />
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label asp-for="Name" class="col-form-label col-3"></label>
+                        <label class="col-form-label col-9">@Model.Name</label>
+                        @*<div class="col-9">
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>*@
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Gender" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            <select asp-for="Gender" asp-items="Html.GetEnumSelectList<GenderX>()" class="form-control">
+                                <option selected="selected" value="">-- Please select --</option>
+                            </select>
+                            <span asp-validation-for="Gender" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="GTE_Age" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            <input asp-for="GTE_Age" asp-items="" class="form-control" />
+                            <span asp-validation-for="GTE_Age" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="HMO" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            @*<select asp-for="HMOID" asp-items="@ViewBag.HMOs" class="form-control" />*@
+                            <select class="form-control" name="hmoId"
+                                    data-val-required="The HMO is required.">
+                                @{
+                                    var hmos = (SelectList)ViewBag.HMOs;
+                                    var hmo = (string)hmos.SelectedValue;
+                                }
+                                @foreach (var h in hmos)
+                                {
+                                    if (hmo == h.Value)
+                                    {
+                                        <option value="@h.Value" selected="selected">@h.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@h.Value">@h.Text</option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="HMOID" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <input type="submit" value="Save" class="btn btn-primary btn-sm" />
+                    <div class="pull-right">
+                        <a asp-action="Index">Back to List</a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

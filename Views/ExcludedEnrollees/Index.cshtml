@@ -1,0 +1,202 @@
+﻿
+@{
+    ViewData["Title"] = "Excluded Enrollees";
+}
+
+<h3 class="text-center">List of Excluded Enrollees</h3>
+
+<!-- Body -->
+<br />
+<div class="card">
+    <div class="card-body">
+        <table class="table table-striped" id="datatab">
+            <thead>
+                <tr>
+                    <th>S/N</th>
+                    <th>
+                        Employment ID
+                    </th>
+                    <th>
+                        Full Names
+                    </th>
+                    <th>
+                        Enrollment ID
+                    </th>
+                    <th>
+                        Gender
+                    </th>
+                    <th>
+                        Reason
+                    </th>
+                    <th>
+                        Year
+                    </th>
+                    @if (User.IsInRole(Enum.GetName(typeof(ProfileTypes), ProfileTypes.SU)) ||
+                  User.IsInRole(Enum.GetName(typeof(ProfileTypes), ProfileTypes.HR)))
+                    {
+                        <th>HMO</th>
+                    }
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+@if (User.IsInRole(Enum.GetName(typeof(ProfileTypes), ProfileTypes.SU)) || User.IsInRole(Enum.GetName(typeof(ProfileTypes), ProfileTypes.ADMIN)))
+{
+    <br />
+    <div class="row">
+        <div class="offset-3 col-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Upload Excluded Enrollees</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="ImportExcludedEnrollees" method="post" enctype="multipart/form-data">
+                        <div class="form-group row">
+                            <label class="col-form-label col-4">Select Template Rule:</label>
+                            <div class="col-8">
+                                <select class="form-control" name="profileId"
+                                        data-val-required="The Import Profile is required.">
+                                    @{
+                                        var profiletypes = (SelectList)ViewBag.ProfileTypes;
+                                        var pt = profiletypes.FirstOrDefault();
+                                    }
+                                    @foreach (var ptype in profiletypes)
+                                    {
+                                        if (pt.Text == ptype.Text)
+                                        {
+                                            <option value="@ptype.Value" selected="selected">@ptype.Text</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@ptype.Value">@ptype.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        @if (User.IsInRole(Enum.GetName(typeof(ProfileTypes), ProfileTypes.SU)))
+                        {
+                            <div class="form-group row">
+                                <label class="col-form-label col-4">HMO:</label>
+                                <div class="col-8">
+                                    <select class="form-control" name="hmoId"
+                                            data-val-required="The HMO is required.">
+                                        @{
+                                            var hmos = (SelectList)ViewBag.HMOs;
+                                            var hmo = hmos.FirstOrDefault();
+                                        }
+                                        @foreach (var h in hmos)
+                                        {
+                                            if (hmo.Text == h.Text)
+                                            {
+                                                <option value="@h.Value" selected="selected">@h.Text</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@h.Value">@h.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                                            }
+                                            else
+                                            {
+                                                <input type="hidden" name="hmoId" value="@ViewBag.HMOID" />
+                                            }
+                        <div class="form-group row">
+                            <label class="col-form-label col-4">Upload template for Excluded Enrollees data:</label>
+                            <div class="col-8">
+                                <input type="file" name="file">
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="form-group row">
+                            <div class="col-12 justify-content-center">
+                                <input class="btn btn-sm btn-info" type="submit" value="Upload">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/libc/datatables/media/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="~/libc/datatables/media/css/dataTables.bootstrap4.min.css" />
+}
+@section Scripts {
+
+    <script src="~/libc/datatables/media/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        function InitializePage() {
+
+            var oTable = $('#datatab').DataTable({
+                "serverSide": true,
+                "ajax": {
+                    "type": "POST",
+                    "url": '/excludedenrollees/List',
+                    "contentType": 'application/json; charset=utf-8',
+                    'data': function (data) { return data = JSON.stringify(data); }
+                },
+                "processing": true,
+                "paging": true,
+                "deferRender": true,
+                "columns": [
+                    {
+                        data: 'sn',
+                        sortable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'empid',
+                    },
+                    {
+                        data: 'names',
+                    },
+                    {
+                        data: 'enrollid',
+                    },
+                    {
+                        data: 'gender',
+                    },
+                    {
+                        data: 'reason',
+                    },
+                    {
+                        data: 'year',
+                    },
+@if (User.IsInRole(Enum.GetName(typeof(ProfileTypes), ProfileTypes.SU)) ||
+User.IsInRole(Enum.GetName(typeof(ProfileTypes), ProfileTypes.HR)))
+{
+    <text>
+                    {
+                        data: 'hmo',
+                    },
+    </text>
+}
+                    {
+                        searchable: false,
+                        sortable: false,
+                        data: "id",
+                        "render": function (data, type, full, meta) {
+                            return '<a class="btn btn-info btn-sm" title="Details" href="/excludedenrollees/details/' + data + '">Details</a>';
+                        }
+                    }
+                ]
+            });
+        }
+
+        (function () {
+            InitializePage();
+        })();
+
+    </script>
+}

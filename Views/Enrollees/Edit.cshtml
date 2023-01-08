@@ -1,0 +1,75 @@
+﻿@using Humanizer
+@model AnnualHealthCheckJs.Models.Enrollee
+
+@{
+    ViewData["Title"] = Model.EmployeeID.ToLower().Humanize(LetterCasing.Title);
+}
+
+<h4 class="text-center">Modify @Model.EmployeeID.ToLower().Humanize(LetterCasing.Title)</h4>
+<hr />
+<div class="row">
+    <div class="offset-3 col-6">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID" />
+            <div class="card">
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.EmployeeID)
+                        </dt>
+                        <dd class="col-sm-8">
+                            <span>@Model.EmployeeID</span>
+                        </dd>
+                        <dt class="col-sm-4">
+                            Full Name
+                        </dt>
+                        <dd class="col-sm-8">
+                            <span>@Model.LastName.ToLower().Humanize(LetterCasing.Title) @Model.OtherNames.ToLower().Humanize(LetterCasing.Title)</span>
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.EnrollmentID)
+                        </dt>
+                        <dd class="col-sm-8">
+                            <span>@Model.EnrollmentID</span>
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.Gender)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @Html.DisplayFor(model => model.Gender)
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.DOB)
+                        </dt>
+                        <dd class="col-sm-8">
+                            @{
+                                var dob = Model.DOB.HasValue ? Model.DOB.Value.ToString("d MMM yyyy") : "";
+                            }
+                            <span>@dob</span>
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.MobileNumber)
+                        </dt>
+                        <dd class="col-sm-8">
+                            <span>@Model.MobileNumber</span>
+                        </dd>
+                        <dt class="col-sm-4">
+                            @Html.DisplayNameFor(model => model.HMO)
+                        </dt>
+                        <dd class="col-sm-8">
+                            <span>@Model.HMO.Name.ToLower().Humanize(LetterCasing.Title)</span>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="card-footer">
+                    <input type="submit" value="Save" class="btn btn-primary btn-sm" />
+                    <div class="pull-right">
+                        <a asp-action="Index">Back to List</a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

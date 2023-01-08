@@ -1,0 +1,202 @@
+﻿@using Humanizer;
+
+@model  ReferenceLetterVM
+@{
+    Layout = "";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <style>
+        body {
+            /*background: rgb(204,204,204);*/
+        }
+
+        page {
+            background: white;
+            display: block;
+            margin: 0 auto;
+            margin-bottom: 0.5cm;
+            /*box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);*/
+        }
+
+            page[size="A4"] {
+                /*width: 21cm;
+        height: 29.7cm;*/
+            }
+
+                page[size="A4"][layout="landscape"] {
+                    width: 29.7cm;
+                    height: 21cm;
+                }
+
+            page[size="A3"] {
+                width: 29.7cm;
+                height: 42cm;
+            }
+
+                page[size="A3"][layout="landscape"] {
+                    width: 42cm;
+                    height: 29.7cm;
+                }
+
+            page[size="A5"] {
+                width: 14.8cm;
+                height: 21cm;
+            }
+
+                page[size="A5"][layout="landscape"] {
+                    width: 21cm;
+                    height: 14.8cm;
+                }
+
+        @@media print {
+            body, page {
+                margin: 0;
+                box-shadow: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <page size="A4">
+        <div id="header">
+            <img src="~/roding_letterhead.png" style="margin-top:0.5cm; margin-right:0.8cm; width:3.4in; height:1in; float:right" />
+            <div style="clear:right"></div>
+        </div>
+        <div id="content" style="margin-top:0.4in; margin-left: 1in; margin-right: 0.8in;font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif; font-size: 15px">
+            @{
+                var fullname = $"{Model.SignUp.Enrollee.LastName} {Model.SignUp.Enrollee.OtherNames}".Trim().ToLower().Humanize(LetterCasing.Title);
+                var locandstate = $"{Model.SignUp.Location.Name.ToLower().Humanize(LetterCasing.Title)}, {Model.SignUp.Location.State.Name.ToLower().Humanize(LetterCasing.Title)}".Trim();
+            }
+            <p>Dear <strong>@fullname</strong>,</p>
+            <p>Thank you for choosing Roding Healthcare. We appreciate the opportunity to serve and your health is very important to us.</p>
+            @*@if (Model.Providers.Count > 1)
+            {
+                <p>Please visit any of our accredited health care providers in <strong>@locandstate</strong> for your annual checkup with the code:</p> <strong>@Model.SignUp.AuthorizationCode.ToUpper()</strong><br />
+                <span>The health care providers along with their addresses are listed below:</span>
+                <ol>
+                    @foreach (var provider in Model.Providers)
+                    {
+                        <li>@provider.Name.ToLower().Humanize(LetterCasing.Title), @provider.Address.ToLower().Humanize(LetterCasing.Title)</li>
+                    }
+                </ol>
+            }
+            else
+            {*@
+                <p>Please visit our accredited healthcare provider in <strong>@locandstate</strong> for your annual checkup with the code:</p> <strong>@Model.SignUp.AuthorizationCode.ToUpper()</strong><br />
+                <p>Your prefered healthcare provider is <strong>@Model.Provider.Name.ToLower().Humanize(LetterCasing.Title)</strong> and situated at <strong>@Model.Provider.Address.ToLower().Humanize(LetterCasing.Title)</strong></p>
+            @*}*@
+            <table border="0" style="width:100%;">
+                <tr>
+                    <td style="vertical-align: top; width: 50%;">
+                        <div style="text-align: center"><strong>Tests</strong></div>
+                        @if (Model.HasDOB)
+                        {
+                            <ol>
+                                @foreach (var service in Model.Services)
+                                {
+                                    if (service.Gender != GenderX.BOTH)
+                                    {
+                                        if (Model.GenderIsKnown)
+                                        {
+                                            <li>@service.Name</li>
+                                        }
+                                        else
+                                        {
+                                            var genderAppend = service.Gender == GenderX.MALE ? "if bearer is Male" : "if bearer is Female";
+                                            <li>@service.Name (@genderAppend)</li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <li>@service.Name</li>
+                                    }
+                                }
+                            </ol>
+                        }
+                        else
+                        {
+                    <ol>
+                        @foreach (var service in Model.Services)
+                        {
+                            if (service.Gender != GenderX.BOTH)
+                            {
+                                if (Model.GenderIsKnown)
+                                {
+                                    <li>@service.Name</li>
+                                }
+                                else
+                                {
+                                    var genderAppend = service.Gender == GenderX.MALE ? "if bearer is Male" : "if bearer is Female";
+                                    <li>@service.Name (@genderAppend)</li>
+                                }
+                            }
+                            else
+                            {
+                                <li>@service.Name</li>
+                            }
+                        }
+                    </ol>
+                    @if (Model.Over40Services.Any())
+                    {
+                            <p>Please note that you are eligible for the following if you are <strong>above forty (40) years.</strong></p>
+                            <ol>
+                                @foreach (var service in Model.Over40Services)
+                                {
+                                    if (service.Gender != GenderX.BOTH)
+                                    {
+                                        if (Model.GenderIsKnown)
+                                        {
+                                            <li><strong>@service.Name</strong></li>
+                                        }
+                                        else
+                                        {
+                                            var genderAppend = service.Gender == GenderX.MALE ? "if bearer is Male" : "if bearer is Female";
+                                            <li><strong>@service.Name (@genderAppend)</strong></li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <li><strong>@service.Name</strong></li>
+                                    }
+
+                                    @*<li><strong>@service.Name</strong></li>*@
+                                }
+                            </ol>
+                        }
+                    }
+                    </td>
+                    <td style="vertical-align: top; width: 50%;">
+                        <span>Before the test:</span><br />
+                        <ol>
+                            <li>Print and take along with you this reference letter.</li>
+                            <li>Fast the night before going for your annual check.</li>
+                            <li>Be at your screening centre before 9:30am.</li>
+                        </ol>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <p>For any further clarifications, please do not hesitate to contact us as advised below.</p>
+            <br />
+            <span>Regards,</span><br />
+            <p><strong>FOR: RODING HEALTHCARE LTD</strong></p>
+            <img src="~/dapo_signature.png" /><br>
+            <span><strong>Dr Oladapo Ogedengbe</strong></span><br>
+            <span><strong>Head, Quality Assurance</strong></span>
+        </div>
+        <div id="footer" style="position: absolute; width: 100%; margin-top:1in">
+            <hr style="height:2px; border:none; color:red; background-color:red; margin: 0.2cm auto">
+            <div style="text-align: right; font-family: Calibri, Candara, Segoe, Optima, Arial, sans-serif; font-size: 16px; margin-top:0.2in;">
+                <span style="margin-right: 1in"><strong>4 Makoko Road, Adekunle, Yaba, Lagos</strong> Tel:  0700 CALL RODING (i.e<strong> 07002255763464</strong>)</span><br />
+                <span style="margin-right: 1in">+2347080601040 (Airtel Tollfree); +2348031230273 (MTN Tollfree)</span><br />
+                <span style="margin-right: 1in">+2348091847583 (Call Centre); +2347083790428 (Call Centre)</span><br />
+                <span style="margin-right: 1in">Email: <span style="text-decoration: underline; color: blue">info@rodinghealthcareltd.com</span>; <span style="text-decoration: underline; color: blue">rodinghealthcare@gmail.com</span>;</span><br />
+                <span style="margin-right: 1in">Website: <span style="text-decoration: underline; color: blue">www.rodinghealthcareltd.com</span></span>
+            </div>
+        </div>
+    </page>
+</body>
+</html>

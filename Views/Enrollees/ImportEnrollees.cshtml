@@ -1,0 +1,81 @@
+﻿@model ImportResultVM
+@{
+    ViewData["Title"] = "Import Enrollees";
+}
+
+<h1>Import Enrollees Results</h1>
+<hr />
+<br />
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<br />
+@if (Model.TotalRows == 0)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="text-danger">
+                @if (string.IsNullOrEmpty(Model.FileName))
+                {
+                    <text>No file was uploaded!. Please upload a file and try again.</text>
+                }
+                else
+                {
+                    <text>No record was found in the file @Model.FileName.ToLower()</text>
+                }
+            </h4>
+        </div>
+    </div>
+}
+else if (Model.TotalRows == Model.SuccessfulRowsImported)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="text-success">
+                A total of @Model.SuccessfulRowsImported records were imported without errors from @Model.FileName.ToLower()
+            </h4>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-12">
+            <h4>
+                Results of records import from @Model.FileName.ToLower()
+            </h4>
+            <h4 class="text-success">
+                @Model.SuccessfulRowsImported records were imported out of a total of @Model.TotalRows
+            </h4>
+            <h4 class="text-danger">
+                @Model.TotalErrors errors were found in @Model.TotalRowsWithErrors
+            </h4>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <h4>
+                (@Model.FileName.ToLower()) Errors
+            </h4>
+            <br />
+            @if (Model.Errors != null)
+            {
+                foreach (var error in Model.Errors)
+                {
+                    <span class="text-danger">
+                        @error
+                    </span>
+                }
+            }
+        </div>
+    </div>
+}
+<hr />
+<br />
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+

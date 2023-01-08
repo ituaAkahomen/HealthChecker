@@ -1,0 +1,113 @@
+﻿@using Humanizer;
+@model AnnualHealthCheckJs.ViewModels.ConfirmViewModel
+
+@{
+    ViewData["Title"] = "Confirm Health Check";
+}
+
+<h4 class="text-center">Confirm Health Check for @Model.Signup.Enrollee.LastName.ToLower().Humanize(LetterCasing.Title) @Model.Signup.Enrollee.OtherNames.ToLower().Humanize(LetterCasing.Title)</h4>
+<hr />
+<div class="row">
+    <div class="offset-2 col-8">
+        <form id="confirmform" asp-action="ConfirmModal">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ProfileType" />
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-form-label col-3">Enrollee Names</label>
+                        <div class="col-9">
+                            <label class="col-form-label">
+                                @Model.Signup.Enrollee.LastName.ToLower().Humanize(LetterCasing.Title) @Model.Signup.Enrollee.OtherNames.ToLower().Humanize(LetterCasing.Title)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-3">Employee ID</label>
+                        <div class="col-9">
+                            <label class="col-form-label">@Model.Signup.Enrollee.EmployeeID</label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-3">Enrollment ID</label>
+                        <div class="col-9">
+                            <label class="col-form-label">@Model.Signup.Enrollee.EnrollmentID</label>
+                        </div>
+                    </div>
+                    @if (User.IsInRole(Enum.GetName(typeof(ProfileTypes), ProfileTypes.PROVIDER)))
+                    {
+                        <div class="form-group row">
+                            <label class="col-form-label col-3">HMO</label>
+                            <div class="col-9">
+                                <label class="col-form-label">@Model.Signup.Enrollee.HMO.Name.ToLower().Humanize(LetterCasing.Title)</label>
+                            </div>
+                        </div>
+                    }
+                    @if (!Model.IsReadOnly)
+                    {
+                        <hr />
+                        <div class="form-group row">
+                            <label class="col-form-label col-3">Checked On</label>
+                            <div class="col-9">
+                                <input type="text" id="scheduleDate" name="CheckedOn"
+                                       value="@Model.CheckedOn" class="form-control"
+                                       placeholder="Enrollee Checked On" data-val="true" readonly />
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group row">
+                            <label class="col-form-label col-3">Checked On</label>
+                            <div class="col-9">
+                                <label class="col-form-label">@Model.CheckedOn.ToString("d MMM, yyyy")</label>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="card-footer">
+                    @if (!Model.IsReadOnly)
+                    {
+                        <input type="submit" value="Confirm" class="btn btn-primary btn-sm" />
+                    }
+                    <div class="pull-right">
+                        <a asp-action="Index">Back to List</a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/flatpickr.min.css" />
+}
+@section Scripts {
+    <script src="~/js/flatpickr.js" type="text/javascript"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        $("#scheduleDate").flatpickr({
+            altInput: true,
+            altFormat: "F j, Y",
+            dateFormat: "Y-m-d",
+            minDate:"@Model.StartDate.ToString("yyyy-M-d")",
+            maxDate: "@Model.EndDate.ToString("yyyy-M-d")",
+            defaultDate: "@Model.CheckedOn.ToString("yyyy-M-d")"
+        });
+
+        $(function () {
+
+            $("#confirmform").data("validator").settings.submitHandler = function (form) {
+                $("#submit-button").attr("disabled", true);
+                $("#submit-button > span").show();
+                form.submit();
+            };
+        });
+
+    </script>
+}
+

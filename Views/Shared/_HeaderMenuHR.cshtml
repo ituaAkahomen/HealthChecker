@@ -1,0 +1,27 @@
+﻿
+<li class="nav-item">
+    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link text-dark" asp-area="" asp-controller="Reports" asp-action="Index">Report</a>
+</li>
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" id="Preview" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        Management
+    </a>
+    <div class="dropdown-menu" aria-labelledby="Preview">
+        <a class="dropdown-item text-dark" asp-area="" asp-controller="hrs" asp-action="Index">HR Users</a>
+        <a class="dropdown-item text-dark" asp-area="" asp-controller="provs" asp-action="Index">Provider Users</a>
+    </div>
+</li>
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" id="Preview" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        Enrollees
+    </a>
+    <div class="dropdown-menu" aria-labelledby="Preview">
+        <a class="dropdown-item text-dark" asp-area="" asp-controller="Signups" asp-action="Index">Signed Up</a>
+        <a class="dropdown-item text-dark" asp-area="" asp-controller="Enrollees" asp-action="Index">Enrollees</a>
+        <a class="dropdown-item text-dark" asp-area="" asp-controller="ExcludedEnrollees" asp-action="Index">Excluded Enrollees</a>
+        <a class="dropdown-item text-dark" asp-area="" asp-controller="Enrollees" asp-action="Demos">Demo Enrollees</a>
+    </div>
+</li>

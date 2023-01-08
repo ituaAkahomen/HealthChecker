@@ -1,0 +1,114 @@
+﻿@model AnnualHealthCheckJs.Models.HMO
+
+@{
+    ViewData["Title"] = "Create New HMO";
+}
+
+<h4 class="text-center">Add a new HMO</h4>
+<hr />
+<div class="row">
+    <div class="offset-2 col-8">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label asp-for="Name" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="SignatoryName" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            <input asp-for="SignatoryName" class="form-control" />
+                            <span asp-validation-for="SignatoryName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="SignatoryDesignation" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            <input asp-for="SignatoryDesignation" class="form-control" />
+                            <span asp-validation-for="SignatoryDesignation" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Email" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="PhoneNumber" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-group row">
+                        <label asp-for="AuthCodeTemplate" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            <input asp-for="AuthCodeTemplate" class="form-control" />
+                            <span asp-validation-for="AuthCodeTemplate" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="GenerateAuthCodeOnSignUpComplete" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            @{
+                                var genauth = "false";
+                                var isChecked = "";
+                            }
+                            <input type="checkbox" name="GenerateAuthCodeOnSignUpComplete" value="@genauth" @isChecked class="form-control align-content-start" />
+                            @*<input type="checkbox" asp-for="GenerateAuthCodeOnSignUpComplete" class="form-control" />*@
+                            <span asp-validation-for="GenerateAuthCodeOnSignUpComplete" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="EmailsToCC" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            <input asp-for="EmailsToCC" class="form-control" />
+                            <span asp-validation-for="EmailsToCC" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="PinRegex" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            <input asp-for="PinRegex" class="form-control" />
+                            <span asp-validation-for="PinRegex" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-group row">
+                        <label class="col-form-label col-3">Signature Image</label>
+                        <div class="col-9">
+                            <input type="file" name="signatureImage" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-3">Logo Image</label>
+                        <div class="col-9">
+                            <input type="file" name="logoImage" class="form-control" />
+                        </div>
+                    </div>
+                    @*<div class="form-group row">
+            <label class="col-form-label col-3">Reference Letter Template</label>
+            <div class="col-9">
+                <input type="file" name="templateFile" class="form-control" />
+            </div>
+        </div>*@
+                </div>
+                <div class="card-footer">
+                    <input type="submit" value="Create" class="btn btn-primary btn-sm" />
+                    <div class="pull-right">
+                        <a asp-action="Index">Back to List</a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

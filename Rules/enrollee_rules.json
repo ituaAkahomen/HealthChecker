@@ -1,0 +1,143 @@
+{
+  "Sheets": [
+    {
+      "SheetName": "Enrollees",
+      "HeaderRow": 0,
+      "Rows": [],
+      "Rules": {}
+    }
+  ],
+  "Rows": [
+    {
+      "ColumnName": "Member ID",
+      "UseSheetName": false,
+      "Constant": "",
+      "AttributeName": "EnrollmentID",
+      "Type": "",
+      "Format": "",
+      "TypeMapper": "",
+      "ToUpper": true,
+      "ToLower": false,
+      "ToFirstUpper": false,
+      "IsRequired": true
+    },
+    {
+      "ColumnName": "STAFF NO",
+      "UseSheetName": false,
+      "Constant": "",
+      "AttributeName": "EmployeeID",
+      "Type": "",
+      "Format": "",
+      "TypeMapper": "",
+      "ToUpper": true,
+      "ToLower": false,
+      "ToFirstUpper": false,
+      "IsRequired": true
+    },
+    {
+      "ColumnName": "Surname",
+      "UseSheetName": false,
+      "Constant": "",
+      "AttributeName": "LastName",
+      "Type": "",
+      "Format": "",
+      "TypeMapper": "",
+      "ToUpper": true,
+      "ToLower": false,
+      "ToFirstUpper": false,
+      "IsRequired": true
+    },
+    {
+      "ColumnName": "Othernames",
+      "UseSheetName": false,
+      "Constant": "",
+      "AttributeName": "OtherNames",
+      "Type": "",
+      "Format": "",
+      "TypeMapper": "",
+      "ToUpper": true,
+      "ToLower": false,
+      "ToFirstUpper": false,
+      "IsRequired": true
+    },
+    {
+      "ColumnName": "Sex",
+      "UseSheetName": false,
+      "Constant": "",
+      "AttributeName": "Gender",
+      "Type": "",
+      "Format": "",
+      "TypeMapper": "",
+      "ToUpper": true,
+      "ToLower": false,
+      "ToFirstUpper": false,
+      "IsRequired": true
+    },
+    {
+      "ColumnName": "DOB",
+      "UseSheetName": false,
+      "Constant": "",
+      "AttributeName": "DOB",
+      "Type": "",
+      "Format": "",
+      "TypeMapper": "",
+      "ToUpper": true,
+      "ToLower": false,
+      "ToFirstUpper": false,
+      "IsRequired": true
+    },
+    {
+      "ColumnName": "Phone No.",
+      "UseSheetName": false,
+      "Constant": "",
+      "AttributeName": "MobileNumber",
+      "Type": "",
+      "Format": "",
+      "TypeMapper": "",
+      "ToUpper": true,
+      "ToLower": false,
+      "ToFirstUpper": false,
+      "IsRequired": true
+    },
+    {
+      "ColumnName": "Email Address",
+      "UseSheetName": false,
+      "Constant": "",
+      "AttributeName": "Email",
+      "Type": "",
+      "Format": "",
+      "TypeMapper": "",
+      "ToUpper": true,
+      "ToLower": false,
+      "ToFirstUpper": false,
+      "IsRequired": true
+    },
+    {
+      "ColumnName": "Client Plan",
+      "UseSheetName": false,
+      "Constant": "",
+      "AttributeName": "ClientPlan",
+      "Type": "",
+      "Format": "",
+      "TypeMapper": "",
+      "ToUpper": true,
+      "ToLower": false,
+      "ToFirstUpper": false,
+      "IsRequired": true
+    }
+  ],
+  "Rules": {
+    "Idempotency": [
+      {
+        "Operator": "",
+        "Attributes": []
+      }
+    ],
+    "Substitutes": [
+      {
+        "Function": "",
+        "Attribute": ""
+      }
+    ]
+  }
+}

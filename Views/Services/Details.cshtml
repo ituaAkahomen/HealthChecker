@@ -1,0 +1,50 @@
+﻿@model AnnualHealthCheckJs.Models.Service
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h4 class="text-center">@Model.Name</h4>
+<hr />
+<div class="offset-3 col-6">
+    <div class="card">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Gender)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Gender)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.GTE_Age)
+                </dt>
+                <dd class="col-sm-8">
+                    @{
+                        var gte = Model.GTE_Age.HasValue ? Model.GTE_Age.ToString() : "";
+                    }
+                    <span>@gte</span>
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.HMO)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.HMO.Name)
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer">
+            <div class="pull-right">
+                <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
+                <a asp-action="Index">Back to List</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>

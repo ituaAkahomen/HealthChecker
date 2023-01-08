@@ -1,0 +1,161 @@
+﻿@using Humanizer
+@model AnnualHealthCheckJs.Models.Provider
+
+@{
+    ViewData["Title"] = "Modify " + Model.Name.Humanize(LetterCasing.Title);
+}
+
+<h4 class="text-center">Modify @Model.Name.ToLower().Humanize(LetterCasing.Title)</h4>
+<hr />
+<div class="row">
+    <div class="offset-3 col-6">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID" />
+            <input type="hidden" asp-for="Name" />
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label asp-for="Name" class="col-form-label col-3"></label>
+                        <label class="col-form-label col-9">@Model.Name</label>
+                        @*<div class="col-9">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>*@
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Address" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            <input asp-for="Address" class="form-control" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="State" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            <select id="stateddl" class="form-control" name="stateid" required>
+                                <option value="">-- Pick a state --</option>
+                                @foreach (var st in ViewBag.States)
+                                {
+                                    if (Model.StateID == int.Parse(st.Value))
+                                    {
+                                        <option value="@st.Value" selected="selected">@st.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@st.Value">@st.Text</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Location" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            <select id="locationddl" class="form-control" name="locationid" required>
+                                <option value="">-- Pick a location --</option>
+                                @if (ViewBag.Locations != null)
+                                {
+                                    foreach (var st in ViewBag.Locations)
+                                    {
+                                        if (Model.LocationID == int.Parse(st.Value))
+                                        {
+                                            <option value="@st.Value" selected="selected">@st.Text</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@st.Value">@st.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                            <span id="location-loading-progress" style="display: none;"><i class="fa fa-circle-o-notch fa-spin fa-2x"></i></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="HMO" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            @*<select asp-for="HMO" asp-items="ViewBag.HMOs" class="form-control" />*@
+                            <select class="form-control" name="HMOID"
+                                    data-val-required="The HMO is required.">
+                                @{
+                                    var hmos = (SelectList)ViewBag.HMOs;
+                                    var hmo = hmos.FirstOrDefault();
+                                }
+                                @foreach (var h in hmos)
+                                {
+                                    if (hmo.Text == h.Text)
+                                    {
+                                        <option value="@h.Value" selected="selected">@h.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@h.Value">@h.Text</option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="HMO" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-group row">
+                        <label asp-for="Email" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="PhoneNumber" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <input type="submit" value="Save" class="btn btn-primary btn-sm" />
+                    <div class="pull-right">
+                        <a asp-action="Index">Back to List</a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/flatpickr.js" type="text/javascript"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        $(function () {
+
+            $("#stateddl").change(function () {
+                let selectedItem = $(this).val();
+                let locationddl = $("#locationddl");
+                let locProgress = $("#location-loading-progress");
+                locProgress.show();
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "/providers/statelocations",
+                    data: { "stateId": selectedItem },
+                    success: function (data) {
+                        locationddl.html('');
+                        locationddl.append('<option value="">-- Pick a location --</option>');
+                        $.each(data.locations, function (id, option) {
+                            locationddl.append($('<option></option>').val(option.value).html(option.text));
+                        });
+                        locProgress.hide();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve locations.');
+                        locProgress.hide();
+                    }
+                });
+            });
+        });
+
+    </script>
+}

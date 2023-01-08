@@ -1,0 +1,187 @@
+﻿@using Humanizer;
+
+@model ReferenceLetterVM
+@{
+    Layout = "";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <style>
+        body {
+            /*background: rgb(204,204,204);*/
+        }
+
+        page {
+            background: white;
+            display: block;
+            margin: 0 auto;
+            margin-bottom: 0.5cm;
+            /*box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);*/
+        }
+
+            page[size="A4"] {
+                /*width: 21cm;
+        height: 29.7cm;*/
+            }
+
+                page[size="A4"][layout="landscape"] {
+                    width: 29.7cm;
+                    height: 21cm;
+                }
+
+            page[size="A3"] {
+                width: 29.7cm;
+                height: 42cm;
+            }
+
+                page[size="A3"][layout="landscape"] {
+                    width: 42cm;
+                    height: 29.7cm;
+                }
+
+            page[size="A5"] {
+                width: 14.8cm;
+                height: 21cm;
+            }
+
+                page[size="A5"][layout="landscape"] {
+                    width: 21cm;
+                    height: 14.8cm;
+                }
+
+        @@media print {
+            body, page {
+                margin: 0;
+                box-shadow: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <page size="A4">
+        <div id="header">
+            <div style="text-align:center;">
+                <img src="~/UnitedLetterHeadImage.jpg" style="margin-top:0.8in; margin-bottom:0.1cm; height:1in;" />
+            </div>
+            <div style="text-align:center;font-family: 'Times New Roman', Calibri, 'Trebuchet MS', Arial, sans-serif; font-size: 14px; color: blue;">
+                <b>LAGOS CORPORATE OFFICE: 19, Biaduo Street, off Keffi Street, SW Ikoyi, Lagos</b><br />
+                <b>Tel: 07034051301, 07034188932, 07043936975, 07043936966</b><br />
+                <b>Website: www.unitedhealthcare-ng.com</b>
+            </div>
+        </div>
+        @{
+            var fullname = $"{Model.SignUp.Enrollee.LastName} {Model.SignUp.Enrollee.OtherNames}".Trim().ToLower().Humanize(LetterCasing.Title);
+            var locandstate = $"{Model.SignUp.Location.Name.ToLower().Humanize(LetterCasing.Title)}, {Model.SignUp.Location.State.Name.ToLower().Humanize(LetterCasing.Title)}".Trim();
+        }
+        <div id="content" style="margin-top:0.4in; margin-left: 1in; margin-right: 0.8in;font-family: Calibri, 'Trebuchet MS', Arial, sans-serif; font-size: 18px">
+            <p>Dear <strong>@fullname</strong>,</p>
+            <p>Thank you for choosing United Healthcare International. We appreciate the opportunity to serve and your health is very important to us.</p>
+            <p>Please visit our accredited healthcare provider in @locandstate for your annual checkup with the code: <strong>@Model.SignUp.AuthorizationCode.ToUpper()</strong></p>
+            <p>Your prefered healthcare provider is <strong>@Model.Provider.Name.ToLower().Humanize(LetterCasing.Title)</strong> and situated at <strong>@Model.Provider.Address.ToLower().Humanize(LetterCasing.Title)</strong></p>
+            <table border="0" style="width:100%;">
+                <tr>
+                    <td style="vertical-align: top; width: 50%;">
+                        @if (Model.HasDOB)
+                        {
+                            <ul>
+                                @foreach (var service in Model.Services)
+                                {
+                                    if (service.Gender != GenderX.BOTH)
+                                    {
+                                        if (Model.GenderIsKnown)
+                                        {
+                                            <li>@service.Name</li>
+                                        }
+                                        else
+                                        {
+                                            var genderAppend = service.Gender == GenderX.MALE ? "if bearer is Male" : "if bearer is Female";
+                                            <li>@service.Name (@genderAppend)</li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <li>@service.Name</li>
+                                    }
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var service in Model.Services)
+                                {
+                                    if (service.Gender != GenderX.BOTH)
+                                    {
+                                        if (Model.GenderIsKnown)
+                                        {
+                                            <li>@service.Name</li>
+                                        }
+                                        else
+                                        {
+                                            var genderAppend = service.Gender == GenderX.MALE ? "if bearer is Male" : "if bearer is Female";
+                                            <li>@service.Name (@genderAppend)</li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <li>@service.Name</li>
+                                    }
+                                }
+                            </ul>
+                            @if (Model.Over40Services.Any())
+                            {
+                                <p>Please note that you are eligible for the following if you are <strong>above forty (40) years.</strong></p>
+                                <ul>
+                                    @foreach (var service in Model.Over40Services)
+                                    {
+                                        if (service.Gender != GenderX.BOTH)
+                                        {
+                                            if (Model.GenderIsKnown)
+                                            {
+                                                <li><strong>@service.Name</strong></li>
+                                            }
+                                            else
+                                            {
+                                                var genderAppend = service.Gender == GenderX.MALE ? "if bearer is Male" : "if bearer is Female";
+                                                <li><strong>@service.Name (@genderAppend)</strong></li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <li><strong>@service.Name</strong></li>
+                                        }
+
+                                        @*<li><strong>@service.Name</strong></li>*@
+                                    }
+                                </ul>
+                            }
+                        }
+                    </td>
+                    <td style="vertical-align: top; width: 50%;">
+                        <span>Before the test:</span><br />
+                        <ol>
+                            <li>Print and take along with you this document.</li>
+                            <li>Fast the night before going for your annual check.</li>
+                            <li>Be at your screening centre before 9:30am.</li>
+                        </ol>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <br />
+            <span>Regards,</span><br />
+            <img style="margin-top: 0.5in; height: 0.4in" src="~/mary_signature.png" /><br>
+            <span>Mary Solomon</span><br>
+            <span style="font-style:italic"><strong>Medical Service Dept</strong></span><br />
+        </div>
+        <br /><br /><br /><br />
+        <div id="footer" style="position: absolute; width: 100%; margin-top:0.5in">
+            <img src="~/united_son_badge.jpg" style="margin-top:0.8in; margin-bottom:0.1cm; margin-left:0.8in; height:1in;" />
+            <img src="~/united_iso_badge.jpg" style="float:right; margin-top:0.8in; margin-bottom:0.1cm; margin-right:0.8in; height:1in;" />
+        </div>
+        <div style="clear:both;"></div>
+    </page>
+</body>
+</html>

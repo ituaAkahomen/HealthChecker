@@ -1,0 +1,90 @@
+﻿
+@{
+    ViewData["Title"] = "Administrators";
+}
+
+<h3 class="text-center">List of Administrators</h3>
+
+<div class="text-right">
+    <a class="btn btn-dark" asp-action="Create">Add an Admin</a>
+</div>
+<div class="clearfix" />
+
+<!-- Body -->
+<br />
+<div class="card">
+    <div class="card-body">
+        <table class="table table-striped" id="datatab">
+            <thead>
+                <tr>
+                    <th>S/N</th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Phone Number
+                    </th>
+                    <th>HMO</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/libc/datatables/media/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="~/libc/datatables/media/css/dataTables.bootstrap4.min.css" />
+}
+@section Scripts {
+
+    <script src="~/libc/datatables/media/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        function InitializePage() {
+
+            var oTable = $('#datatab').DataTable({
+                "serverSide": true,
+                "ajax": {
+                    "type": "POST",
+                    "url": '/admins/List',
+                    "contentType": 'application/json; charset=utf-8',
+                    'data': function (data) { return data = JSON.stringify(data); }
+                },
+                "processing": true,
+                "paging": true,
+                "deferRender": true,
+                "columns": [
+                    {
+                        data: 'sn',
+                        sortable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'email',
+                    },
+                    {
+                        data: 'phone',
+                    },
+                    {
+                        data: 'hmo',
+                    },
+                    {
+                        searchable: false,
+                        sortable: false,
+                        data: "id",
+                        "render": function (data, type, full, meta) {
+                            return '<a class="btn btn-info btn-sm" title="Details" href="/admins/details/' + data + '">Details</a>&nbsp;<a class="btn btn-light btn-sm" title="Edit" href="/admins/edit/' + data + '">Edit</a>&nbsp;<a class="btn btn-danger btn-sm" title="Delete" href="/admins/delete/' + data + '">Delete</a>';
+                        }
+                    }
+                ]
+            });
+        }
+
+        (function () {
+            InitializePage();
+        })();
+
+    </script>
+}

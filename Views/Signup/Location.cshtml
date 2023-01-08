@@ -1,0 +1,224 @@
+﻿@using Microsoft.Extensions.Options;
+@using reCAPTCHA.AspNetCore;
+
+@model LocationAndAvailabilityVM
+
+@inject IOptions<RecaptchaSettings> RecaptchaSettings
+
+@{
+    Layout = "_AnonLayout";
+    ViewData["Title"] = "Pick Location";
+}
+
+<div class="row h-100">
+    <div class="col-12 my-auto">
+        <div class="row mb-2">
+            <div class="col-6 justify-content-center">
+                <img src="/image/Logo/@Model.hmoGuid" />
+            </div>
+            <div class="col-6 justify-content-end">
+                <img class="float-right mr-2" src="/image/unionlogo" />
+                <div class="clearfix"></div>
+            </div>
+            @*<div class="col-6 justify-content-center">
+                    <img src="/image/Logo/@Model.hmoGuid" />
+                </div>*@
+            @*<div class="col-6 justify-content-center">
+                    <img src="/image/rodinglogo" />
+                </div>
+                <div class="col-6 justify-content-center">
+                    <img src="/image/unionlogo" />
+                </div>*@
+            @*<div class="offset-md-5 col-7 justify-content-center">
+                    <img src="/image/anchorhmologo" />
+                </div>*@
+        </div>
+        <div class="masthead-content text-white py-5 py-md-0">
+            <h2 class="mb-3 text-center">Pick a Location and Set an Appointment</h2>
+            <br />
+            <form id="locationform" method="post" asp-action="location">
+                <div asp-validation-summary="All" class="text-center text-danger font-weight-bold"></div>
+                <input type="hidden" name="SignupID" value="@Model.SignUp.ID" />
+@*                @Html.Recaptcha(RecaptchaSettings?.Value)
+*@                <div class="form-group">
+                    <select id="stateddl" class="form-control-lg" name="stateid" required>
+                        <option value="">-- Pick a state --</option>
+                        @foreach (var st in Model.StatesList)
+                        {
+                            if (Model.StateID == int.Parse(st.Value))
+                            {
+                                <option value="@st.Value" selected="selected">@st.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@st.Value">@st.Text</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <br />
+                <div class="form-group">
+                    <select id="locationddl" class="form-control-lg" name="locationid" required>
+                        <option value="">-- Pick a location --</option>
+                        @if (Model.LocationsList != null)
+                        {
+                            foreach (var st in Model.LocationsList)
+                            {
+                                if (Model.LocationID == int.Parse(st.Value))
+                                {
+                                    <option value="@st.Value" selected="selected">@st.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@st.Value">@st.Text</option>
+                                }
+                            }
+                        }
+                    </select>
+                    <span id="location-loading-progress" style="display: none;"><i class="fa fa-circle-o-notch fa-spin fa-2x"></i></span>
+                </div>
+                <br />
+                <div class="form-group">
+                    <select id="providerddl" class="form-control-lg" name="providerid" required>
+                        <option value="">-- Pick a Provider --</option>
+                        @if (Model.ProvidersList != null)
+                        {
+                            foreach (var st in Model.ProvidersList)
+                            {
+                                if (Model.ProviderID == int.Parse(st.Value))
+                                {
+                                    <option value="@st.Value" selected="selected">@st.Text</option>
+                                }
+                                else
+                                {
+                                    <option value="@st.Value">@st.Text</option>
+                                }
+                            }
+                        }
+                    </select>
+                    <span id="provider-loading-progress" style="display: none;"><i class="fa fa-circle-o-notch fa-spin fa-2x"></i></span>
+                </div>
+                <br />
+
+                <div class="form-group">
+                    <input type="text" id="scheduleDate" name="Appointment"
+                           class="form-control-lg" value="@Model.AppointmentDate"
+                           placeholder="Schedule Appointment" data-val="true" readonly />
+                </div>
+                <br />
+                <div class="form-group">
+                    <button id="submit-button" class="btn btn-lg btn-dark btn-block">
+                        Continue
+                        &nbsp;&nbsp;
+                        <i class="fa fa-arrow-right"></i>
+                        &nbsp;&nbsp;
+                        <span class="spinner-border" style="display: none"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/flatpickr.min.css" />
+}
+@section Scripts {
+    <script src="~/js/flatpickr.js" type="text/javascript"></script>
+    <partial name="_ValidationScriptsPartial" />
+    @{
+        var defdate = Model.AppointmentDate.HasValue ? Model.AppointmentDate.Value : (DateTime.Now.Date > Model.EndDate.Date.AddDays(1) ? Model.EndDate.Date : Model.EndDate.Date.AddDays(1));
+    }
+    <script type="text/javascript">
+
+        $("#scheduleDate").flatpickr({
+            altInput: true,
+            altFormat: "F j, Y",
+            dateFormat: "Y-m-d",
+            minDate:"@Model.StartDate.ToString("yyyy-M-d")",
+            maxDate: "@Model.EndDate.ToString("yyyy-M-d")",
+            defaultDate: "@defdate.ToString("yyyy-M-d")",
+            disable: [
+                function(date) {
+                    // return true to disable
+                    return (date.getDay() === 0);
+                }
+            ],
+        });
+
+        $(function () {
+
+            $("#locationform").data("validator").settings.submitHandler = function (form) {
+                $("#submit-button").attr("disabled", true);
+                $("#submit-button > span").show();
+                form.submit();
+            };
+
+            $("#stateddl").change(function () {
+                let selectedItem = $(this).val();
+                let locationddl = $("#locationddl");
+                let locProgress = $("#location-loading-progress");
+                let providerddl = $("#providerddl");
+                let provProgress = $("#provider-loading-progress");
+                locProgress.show();
+                provProgress.show();
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "/signup/statelocations",
+                    data: { "stateId": selectedItem, "hmoId": '@Model.hmoGuid' },
+                    success: function (data) {
+                        locationddl.html('');
+                        if (data.locations.length > 1)
+                            locationddl.append('<option value="">-- Pick a location --</option>');
+                        providerddl.html('');
+                        if (data.providers.length >= 1)
+                            providerddl.append('<option value="">-- Pick a Provider --</option>');
+                        $.each(data.locations, function (id, option) {
+                            locationddl.append($('<option></option>').val(option.value).html(option.text));
+                        });
+                        if (data.locations.length === 1) {
+                            $.each(data.providers, function (id, option) {
+                                providerddl.append($('<option></option>').val(option.value).html(option.text));
+                            });
+                        }
+                        locProgress.hide();
+                        provProgress.hide();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve locations and providers.');
+                        locProgress.hide();
+                        provProgress.hide();
+                    }
+                });
+            });
+
+            $("#locationddl").change(function () {
+                let selectedItem = $(this).val();
+                let providerddl = $("#providerddl");
+                let provProgress = $("#provider-loading-progress");
+                provProgress.show();
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "/signup/locationproviders",
+                    data: { "locationId": selectedItem, "hmoId": '@Model.hmoGuid' },
+                    success: function (data) {
+                        providerddl.html('');
+                        if (data.length > 1)
+                            providerddl.append('<option value="">-- Pick a Provider --</option>');
+                        $.each(data, function (id, option) {
+                            providerddl.append($('<option></option>').val(option.value).html(option.text));
+                        });
+                        provProgress.hide();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve providers.');
+                        provProgress.hide();
+                    }
+                });
+            });
+        });
+
+    </script>
+}

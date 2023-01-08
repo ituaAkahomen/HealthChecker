@@ -1,0 +1,193 @@
+﻿@using Humanizer;
+
+@model ReferenceLetterVM
+@{
+    Layout = "";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <style>
+        body {
+            /*background: rgb(204,204,204);*/
+        }
+
+        page {
+            background: white;
+            display: block;
+            margin: 0 auto;
+            margin-bottom: 0.5cm;
+            /*box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);*/
+        }
+
+            page[size="A4"] {
+                /*width: 21cm;
+        height: 29.7cm;*/
+            }
+
+                page[size="A4"][layout="landscape"] {
+                    width: 29.7cm;
+                    height: 21cm;
+                }
+
+            page[size="A3"] {
+                width: 29.7cm;
+                height: 42cm;
+            }
+
+                page[size="A3"][layout="landscape"] {
+                    width: 42cm;
+                    height: 29.7cm;
+                }
+
+            page[size="A5"] {
+                width: 14.8cm;
+                height: 21cm;
+            }
+
+                page[size="A5"][layout="landscape"] {
+                    width: 21cm;
+                    height: 14.8cm;
+                }
+
+        @@media print {
+            body, page {
+                margin: 0;
+                box-shadow: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <page size="A4">
+        <div id="header">
+            <span>
+                <img src="~/united_letterhead.jpg" style="margin-top:0.9in; margin-bottom:0.5cm; margin-left:0.8in; width:1.2in;" />
+            </span>
+            <div style="margin-top:-1in;text-align:center;font-family: 'Times New Roman', Calibri, 'Trebuchet MS', Arial, sans-serif; font-size: 18px">
+                <b>UNITED HEALTHCARE INTERNATIONAL LTD</b><br />
+                <b>19, Biaduo Street, off Keffi Street, SW Ikoyi, Lagos.</b>
+            </div>
+        </div>
+        @{
+            var gend = Model.SignUp.Enrollee.Gender == Gender.UNKNOWN ? "he / she" : (Model.SignUp.Enrollee.Gender == Gender.FEMALE ? "she" : "he");
+            var gender = Model.SignUp.Enrollee.Gender == Gender.UNKNOWN ? "his/her" : (Model.SignUp.Enrollee.Gender == Gender.FEMALE ? "her" : "his");
+            var gen = Model.SignUp.Enrollee.Gender == Gender.UNKNOWN ? "him/her" : (Model.SignUp.Enrollee.Gender == Gender.FEMALE ? "her" : "him");
+            var fullname = $"{Model.SignUp.Enrollee.LastName} {Model.SignUp.Enrollee.OtherNames}".Trim().ToUpper();
+        }
+        <div id="content" style="margin-top:0.4in; margin-left: 1in; margin-right: 0.8in;font-family: Calibri, 'Trebuchet MS', Arial, sans-serif; font-size: 18px">
+            <p>@Model.SignUp.DateUpdated.Value.Day.Ordinalize() @Model.SignUp.DateUpdated.Value.ToString("MMMM yyyy").</p>
+            <p>The Medical Director,</p>
+            <p>@Model.Provider.Name.ToLower().Humanize(LetterCasing.Title)</p>
+            <p>@Model.Provider.Address.ToLower().Humanize(LetterCasing.Title)</p>
+            <p>@Model.Provider.Location.Name.ToLower().Humanize(LetterCasing.Title) - @Model.Provider.Location.State.Name.ToLower().Humanize(LetterCasing.Title)</p>
+            <p>Dear Sir,</p>
+            <div style="margin:0cm auto; text-decoration: underline; text-align:center">AUTHORIZATION LETTER FOR @fullname</div>
+            <p>The above named is an enrollee registered under United Healthcare International with ID number UBN/@Model.SignUp.Enrollee.EmployeeID is being referred to your facility for @gender annual medical screening exercise.</p>
+            <p>@gend.Humanize(LetterCasing.Title) is expected to have the following investigations carried out on @gen during the exercise:</p>
+            <table border="0" style="width:100%;">
+                <tr>
+                    <td style="vertical-align: top; width: 50%;">
+                        @if (Model.HasDOB)
+                        {
+                            <ul>
+                                @foreach (var service in Model.Services)
+                                {
+                                    if (service.Gender != GenderX.BOTH)
+                                    {
+                                        if (Model.GenderIsKnown)
+                                        {
+                                            <li>@service.Name</li>
+                                        }
+                                        else
+                                        {
+                                            var genderAppend = service.Gender == GenderX.MALE ? "if bearer is Male" : "if bearer is Female";
+                                            <li>@service.Name (@genderAppend)</li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <li>@service.Name</li>
+                                    }
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var service in Model.Services)
+                                {
+                                    if (service.Gender != GenderX.BOTH)
+                                    {
+                                        if (Model.GenderIsKnown)
+                                        {
+                                            <li>@service.Name</li>
+                                        }
+                                        else
+                                        {
+                                            var genderAppend = service.Gender == GenderX.MALE ? "if bearer is Male" : "if bearer is Female";
+                                            <li>@service.Name (@genderAppend)</li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <li>@service.Name</li>
+                                    }
+                                }
+                            </ul>
+                            @if (Model.Over40Services.Any())
+                            {
+                                <p>Please note that you are eligible for the following if you are <strong>above forty (40) years.</strong></p>
+                                <ul>
+                                    @foreach (var service in Model.Over40Services)
+                                    {
+                                        if (service.Gender != GenderX.BOTH)
+                                        {
+                                            if (Model.GenderIsKnown)
+                                            {
+                                                <li><strong>@service.Name</strong></li>
+                                            }
+                                            else
+                                            {
+                                                var genderAppend = service.Gender == GenderX.MALE ? "if bearer is Male" : "if bearer is Female";
+                                                <li><strong>@service.Name (@genderAppend)</strong></li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <li><strong>@service.Name</strong></li>
+                                        }
+
+                                        @*<li><strong>@service.Name</strong></li>*@
+                                    }
+                                </ul>
+                            }
+                        }
+                    </td>
+                    <td style="vertical-align: top; width: 50%;">
+                        <span>Before the test:</span><br />
+                        <ol>
+                            <li>Print and take along with you this document.</li>
+                            <li>Fast the night before going for your annual check.</li>
+                            <li>Be at your screening centre before 9:30am.</li>
+                        </ol>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <p>We humbly request that you accord @gen all necessary assistance throughout @gender visit.</p>
+            <p>Here is an approval code for the screening - <strong>@Model.SignUp.AuthorizationCode.ToUpper()</strong>.</p>
+            <p>Kindly forward your bills to us for settlement.</p>
+            <p>Thank you for your usual co-operation.</p>
+            <br />
+            <span>Yours faithfully,</span><br />
+            <img style="margin-top: 0.5in; height: 0.4in" src="~/mary_signature.png" /><br>
+            <span><strong>Mary Solomon</strong></span><br>
+            <span style="font-style:italic">Medical Service Dept</span><br />
+        </div>
+        <div id="footer" style="position: absolute; width: 100%; margin-top:0.5in">
+        </div>
+    </page>
+</body>
+</html>

@@ -1,0 +1,31 @@
+﻿@model AnnualHealthCheckJs.Models.ImportEnrolleeSettings
+
+@{
+    ViewData["Title"] = "Delete Import Enrollee Settings";
+}
+
+<h3>Are you sure you want to delete this Import Enrollee Settings?</h3>
+<div>
+    <h4>Import Enrollee Settings</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-4">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-8">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-4">
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </dt>
+        <dd class = "col-sm-8">
+            @Html.DisplayFor(model => model.DateCreated)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="ID" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

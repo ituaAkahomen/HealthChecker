@@ -1,0 +1,72 @@
+﻿@using Humanizer
+@model IEnumerable<AnnualHealthCheckJs.Models.Enrollee>
+
+@{
+    ViewData["Title"] = "Demos";
+}
+
+<h4 class="text-center">Demos</h4>
+<hr />
+<div>
+    <div>
+        <a asp-action="RemoveAllDemos">Remove all Demos</a>
+    </div>
+    <div class="pull-right">
+        <a asp-action="CreateDemo">Create New Demo</a>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EmployeeID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EnrollmentID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MobileNumber)
+            </th>
+            <th>
+                Full Name
+            </th>
+            <th>
+                HMO
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmployeeID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EnrollmentID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MobileNumber)
+            </td>
+            <td>
+                @item.LastName @item.OtherNames
+            </td>
+            <td>
+                @item.HMO.Name.Humanize(LetterCasing.Title)
+            </td>
+            <td>
+                <a asp-action="RemoveDemo" asp-route-id="@item.ID">Delete</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+

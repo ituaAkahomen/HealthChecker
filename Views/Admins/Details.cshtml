@@ -1,0 +1,41 @@
+﻿@model AnnualHealthCheckJs.ViewModels.AdminVM
+
+@{
+    ViewData["Title"] = "Admin Details";
+}
+
+<h4 class="text-center">Admin Details</h4>
+<hr />
+<div class="offset-3 col-6">
+    <div class="card">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Email)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Email)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.PhoneNumber)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.PhoneNumber)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.HMO)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.HMO)
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer">
+            <div class="pull-right">
+                <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+                <a asp-action="Index">Back to List</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>

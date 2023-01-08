@@ -1,0 +1,305 @@
+﻿@model ReportViewModel
+
+@{
+    ViewData["Title"] = "Reports";
+}
+
+<h3 class="text-center">Reports</h3>
+
+<div class="row">
+    <div class="col-4">
+        <a asp-area="" asp-controller="reports" asp-action="exportreport" class="btn btn-light">Export to Excel</a>
+    </div>
+    <div class="col-3">
+    </div>
+    <div class="col-5">
+        <div class="text-right">
+            <form id="pickerform" method="post" style="margin:0">
+                <div class="input-group">
+                    <input type="text" id="reportRangeDate" name="range"
+                           class="form-control d-inline-block" placeholder="Report Range"
+                           data-val="true" readonly />
+                    <span class="input-group-btn">
+                        <button class="btn btn-success">
+                            Generate Report
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Body -->
+<br />
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Utilization By Gender</div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="with-3d-shadow with-transitions">
+                            <svg id="gchart" class="mypiechart"></svg>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <table class="table table-striped" id="gendertab">
+                            <thead>
+                                <tr>
+                                    <th>S/N</th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Percent Utilization
+                                    </th>
+                                    <th>
+                                        Utilization Count
+                                    </th>
+                                    <th>
+                                        Total
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Utilization by Age Range</div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="with-3d-shadow with-transitions">
+                            <svg id="achart" class="mypiechart"></svg>
+                        </div>
+                    </div>
+                    <table class="table table-striped" id="agerangetab">
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Percent Utilization
+                                </th>
+                                <th>
+                                    Utilization Count
+                                </th>
+                                <th>
+                                    Total
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Ratings Summary</div>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped" id="ratingtab">
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Rating
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/flatpickr.min.css" />
+    <link rel="stylesheet" href="~/libc/datatables/media/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="~/libc/datatables/media/css/dataTables.bootstrap4.min.css" />
+    <link rel="stylesheet" href="~/css/d3/nv.d3.min.css" />
+    <style>
+        svg {
+            display: block;
+            float: left;
+            height: 300px !important;
+            /*width: 600px !important;*/
+        }
+    </style>
+
+}
+@section Scripts {
+    <script src="~/js/flatpickr.js" type="text/javascript"></script>
+    <script src="~/libc/datatables/media/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="~/js/d3/d3.min.js" type="text/javascript"></script>
+    <script src="~/js/d3/nv.d3.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        $("#reportRangeDate").flatpickr({
+            mode: "range",
+            altInput: true,
+            altFormat: "F j, Y",
+            dateFormat: "Y-m-d",
+            minDate:"@Model.StartDate.ToString("yyyy-M-d")",
+            maxDate: "@Model.EndDate.ToString("yyyy-M-d")",
+            defaultDate: ["@Model.StartDate.ToString("yyyy-M-d")", "@Model.EndDate.ToString("yyyy-M-d")"]
+        });
+
+        function InitializePage()
+        {
+            var oTable = $('#gendertab').DataTable({
+                "serverSide": true,
+                "ajax": {
+                    "type": "POST",
+                    "url": '/reports/genderUtilizationList',
+                    "contentType": 'application/json; charset=utf-8',
+                    'data': function (data) { return data = JSON.stringify(data); }
+                },
+                "processing": true,
+                "paging": true,
+                "deferRender": true,
+                "columns": [
+                    {
+                        data: 'sn',
+                        sortable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'name',
+                    },
+                    {
+                        data: 'percent',
+                    },
+                    {
+                        data: 'utilization',
+                    },
+                    {
+                        data: 'total',
+                    }
+                ]
+            });
+            RenderPie("/reports/genderpie", "#gchart");
+
+            var aTable = $('#agerangetab').DataTable({
+                "serverSide": true,
+                "ajax": {
+                    "type": "POST",
+                    "url": '/reports/ageRangeUtilizationList',
+                    "contentType": 'application/json; charset=utf-8',
+                    'data': function (data) { return data = JSON.stringify(data); }
+                },
+                "processing": true,
+                "paging": true,
+                "deferRender": true,
+                "columns": [
+                    {
+                        data: 'sn',
+                        sortable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'name',
+                    },
+                    {
+                        data: 'percent',
+                    },
+                    {
+                        data: 'utilization',
+                    },
+                    {
+                        data: 'total',
+                    }
+                ]
+            });
+            RenderPie("/reports/agepie", "#achart");
+
+            var rTable = $('#ratingtab').DataTable({
+                "serverSide": true,
+                "ajax": {
+                    "type": "POST",
+                    "url": '/reports/ratingList',
+                    "contentType": 'application/json; charset=utf-8',
+                    'data': function (data) { return data = JSON.stringify(data); }
+                },
+                "processing": true,
+                "paging": true,
+                "deferRender": true,
+                "columns": [
+                    {
+                        data: 'sn',
+                        sortable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'name',
+                    },
+                    {
+                        data: 'rating',
+                    }
+                ]
+            });
+        }
+
+        function RenderPie(json, id) {
+            var jqxhr = $.getJSON(json, function (data) {
+                if (data.length == 0)
+                    return;
+
+                var height = 300;
+                var width = 300;
+
+                nv.addGraph(function () {
+                    var chart = nv.models.pieChart()
+                        .x(function (d) { return d.key })
+                        .y(function (d) { return d.value })
+                        .width(width)
+                        .height(height)
+                        .showTooltipPercent(true)
+                        .legendPosition('left');
+
+                    d3.select(id)
+                        .datum(data)
+                        .transition().duration(1200)
+                        .attr('width', width)
+                        .attr('height', height)
+                        .call(chart);
+
+                    chart.update();
+                });
+            })
+            .fail(function () {
+                console.log("error: failed to load data!");
+            });
+        }
+
+        (function () {
+            InitializePage();
+        })();
+
+    </script>
+}

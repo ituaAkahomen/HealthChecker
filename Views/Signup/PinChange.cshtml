@@ -1,0 +1,84 @@
+﻿@using Microsoft.Extensions.Options;
+@using reCAPTCHA.AspNetCore;
+
+@model ChangePinVM
+
+@inject IOptions<RecaptchaSettings> RecaptchaSettings
+
+@{
+    Layout = "_AnonLayout";
+    ViewData["Title"] = "Change PIN";
+}
+
+<div class="row h-100">
+    <div class="col-12 my-auto">
+        <div class="row mb-2">
+            <div class="col-6 justify-content-center">
+                <img src="/image/Logo/@Model.hmoGuid" />
+            </div>
+            <div class="col-6 justify-content-end">
+                <img class="float-right mr-2" src="/image/unionlogo" />
+                <div class="clearfix"></div>
+            </div>
+            @*<div class="col-6 justify-content-center">
+                    <img src="/image/Logo/@Model.hmoGuid" />
+                </div>*@
+            @*<div class="col-6 justify-content-center">
+                    <img src="/image/rodinglogo" />
+                </div>
+                <div class="col-6 justify-content-center">
+                    <img src="/image/unionlogo" />
+                </div>*@
+            @*<div class="offset-md-5 col-7 justify-content-center">
+                    <img src="/image/anchorhmologo" />
+                </div>*@
+        </div>
+        <div class="masthead-content text-white py-5 py-md-0">
+            <h2 class="mb-3 text-center">Change your PIN</h2>
+            <br />
+            <form id="verifyform" method="post" asp-action="pinchange">
+                <div asp-validation-summary="All" class="text-center text-danger font-weight-bold"></div>
+@*                @Html.Recaptcha(RecaptchaSettings?.Value)
+*@                <input type="hidden" name="Id" value="@Model.enrollee.ID" />
+                <input type="hidden" name="Link" value="@Model.Link" />
+                <div class="form-group">
+                    <input type="password" asp-for="OldPin" class="form-control-lg" placeholder="Current Password" autocomplete="off" />
+                    <strong><span asp-validation-for="OldPin" class="text-danger"></span></strong>
+                </div>
+                <br />
+                <div class="form-group">
+                    <input type="password" asp-for="NewPin" class="form-control-lg" placeholder="New Password" />
+                    <strong><span asp-validation-for="NewPin" class="text-danger"></span></strong>
+                </div>
+                <br />
+                <div class="form-group">
+                    <input type="password" asp-for="ConfirmNewPin" class="form-control-lg" placeholder="Confirm new Password" />
+                    <strong><span asp-validation-for="ConfirmNewPin" class="text-danger"></span></strong>
+                </div>
+                <br />
+                <div class="form-group">
+                    <button id="submit-button" class="btn btn-lg btn-dark btn-block">
+                        Continue
+                        &nbsp;&nbsp;
+                        <i class="fa fa-arrow-right"></i>
+                        &nbsp;&nbsp;
+                        <span class="spinner-border" style="display: none"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(function () {
+            $("#verifyform").data("validator").settings.submitHandler = function (form) {
+                $("#submit-button").attr("disabled", true);
+                $("#submit-button > span").show();
+                form.submit();
+            };
+        });
+    </script>
+}

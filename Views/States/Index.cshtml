@@ -1,0 +1,103 @@
+﻿@model Country
+@{
+    string extra = string.Empty;
+    if (Model == null)
+    {
+        ViewData["Title"] = "States";
+    }
+    else
+    {
+        ViewData["Title"] = "States in " + Model.Name;
+        extra = "in " + Model.Name;
+    }
+}
+
+<h3 class="text-center">List of States @extra</h3>
+
+<div class="text-right">
+    <a class="btn btn-dark" asp-action="Create">Add a State</a>
+</div>
+<div class="clearfix" />
+
+<!-- Body -->
+<br />
+<div class="card">
+    <div class="card-body">
+        <table class="table table-striped" id="datatab">
+            <thead>
+                <tr>
+                    <th>S/N</th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Country
+                    </th>
+                    <th>
+                        Locations
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/libc/datatables/media/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="~/libc/datatables/media/css/dataTables.bootstrap4.min.css" />
+}
+@section Scripts {
+
+    <script src="~/libc/datatables/media/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        function InitializePage() {
+            @{
+                string url = (Model == null) ? "/States/List" : "/States/List/" + Model.ID;
+            }
+            var oTable = $('#datatab').DataTable({
+                "serverSide": true,
+                "ajax": {
+                    "type": "POST",
+                    "url": '@url',
+                    "contentType": 'application/json; charset=utf-8',
+                    'data': function (data) { return data = JSON.stringify(data); }
+                },
+                "processing": true,
+                "paging": true,
+                "deferRender": true,
+                "columns": [
+                    {
+                        data: 'sn',
+                        sortable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'name',
+                    },
+                    {
+                        data: 'country',
+                    },
+                    {
+                        data: 'locationcount',
+                    },
+                    {
+                        searchable: false,
+                        sortable: false,
+                        data: "id",
+                        "render": function (data, type, full, meta) {
+                            return '<a class="btn btn-info btn-sm" title="Details" href="/states/details/' + data + '">Details</a>&nbsp;<a class="btn btn-light btn-sm" title="Edit" href="/states/edit/' + data + '">Edit</a>&nbsp;<a class="btn btn-danger btn-sm" title="Delete" href="/states/delete/' + data + '">Delete</a>';
+                        }
+                    }
+                ]
+            });
+        }
+
+        (function () {
+            InitializePage();
+        })();
+
+    </script>
+}

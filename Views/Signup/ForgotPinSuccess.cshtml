@@ -1,0 +1,45 @@
+﻿@using Microsoft.Extensions.Options;
+@using reCAPTCHA.AspNetCore;
+
+@inject IOptions<RecaptchaSettings> RecaptchaSettings
+@{
+    Layout = "_AnonLayout";
+    ViewData["Title"] = "PIN Changed Successfully";
+}
+
+<div class="row h-100">
+    <div class="col-12 my-auto">
+        <div class="row mb-2">
+            <div class="offset-md-5 col-7 justify-content-center">
+                <img src="/image/unionlogo" />
+            </div>
+            @*<div class="col-6 justify-content-center">
+                    <img src="/image/Logo/@Model.hmoGuid" />
+                </div>*@
+            @*<div class="col-6 justify-content-center">
+                    <img src="/image/rodinglogo" />
+                </div>
+                <div class="col-6 justify-content-center">
+                    <img src="/image/unionlogo" />
+                </div>*@
+            @*<div class="offset-md-5 col-7 justify-content-center">
+                    <img src="/image/anchorhmologo" />
+                </div>*@
+        </div>
+        <div class="masthead-content text-white py-5 py-md-0">
+            <h2 class="mb-3 text-center">PIN Changed Successfully</h2>
+            <br />
+            <p class="mb-5">
+                Your PIN has been changed successfully.
+            </p>
+            <p class="mb-5">
+                You can continue the signup process by clicking the button below.
+            </p>
+            <a class="btn btn-lg btn-dark btn-block" asp-action="verify" asp-controller="signup">
+                Sign Up
+                &nbsp;&nbsp;
+                <i class="fa fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>

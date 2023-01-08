@@ -1,0 +1,60 @@
+﻿@using Humanizer;
+@model AnnualHealthCheckJs.Models.SignUp
+
+@{
+    ViewData["Title"] = Model.Enrollee.EmployeeID;
+}
+
+<h4 class="text-center">@Model.Enrollee.EmployeeID</h4>
+<hr />
+<div class="offset-3 col-6">
+    <div class="card">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Enrollee.EmployeeID)
+                </dt>
+                <dd class="col-sm-8">
+                    <span>@Model.Enrollee.EmployeeID</span>
+                </dd>
+                <dt class="col-sm-4">
+                    Full Name
+                </dt>
+                <dd class="col-sm-8">
+                    <span>@Model.Enrollee.LastName.ToLower().Humanize(LetterCasing.Title) @Model.Enrollee.OtherNames.ToLower().Humanize(LetterCasing.Title)</span>
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Enrollee.EnrollmentID)
+                </dt>
+                <dd class="col-sm-8">
+                    <span>@Model.Enrollee.EnrollmentID</span>
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Enrollee.Gender)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Enrollee.Gender)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Year)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.Year)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.AuthorizationCode)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.AuthorizationCode)
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer">
+            <div class="pull-right">
+                <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
+                <a asp-action="Index">Back to List</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>

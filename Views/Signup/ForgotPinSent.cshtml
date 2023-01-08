@@ -1,0 +1,46 @@
+﻿@using Microsoft.Extensions.Options;
+@using reCAPTCHA.AspNetCore;
+
+@inject IOptions<RecaptchaSettings> RecaptchaSettings
+@{
+    Layout = "_AnonLayout";
+    ViewData["Title"] = "PIN Sent";
+}
+
+<div class="row h-100">
+    <div class="col-12 my-auto">
+        <div class="row mb-2">
+            <div class="offset-md-5 col-7 justify-content-center">
+                <img src="/image/unionlogo" />
+            </div>
+            @*<div class="col-6 justify-content-center">
+                    <img src="/image/Logo/@Model.hmoGuid" />
+                </div>*@
+            @*<div class="col-6 justify-content-center">
+                    <img src="/image/rodinglogo" />
+                </div>
+                <div class="col-6 justify-content-center">
+                    <img src="/image/unionlogo" />
+                </div>*@
+            @*<div class="offset-md-5 col-7 justify-content-center">
+                    <img src="/image/anchorhmologo" />
+                </div>*@
+        </div>
+        <div class="masthead-content text-white py-5 py-md-0">
+            <h2 class="mb-3 text-center">PIN Sent</h2>
+            <br />
+            <p class="mb-5">
+                Your reset PIN has been sent to your official email address.
+            </p>
+            <p class="mb-5">
+                If you cannot find the reset PIN email, check your <strong>Spam</strong>. If the mail is not delivered after thirty minutes, please retry the process.
+            </p>
+            <a class="btn btn-lg btn-dark btn-block" asp-action="forgot" asp-controller="signup">
+                Forgot PIN
+                &nbsp;&nbsp;
+                <i class="fa fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+

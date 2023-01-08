@@ -1,0 +1,96 @@
+﻿@using Humanizer
+
+@model AnnualHealthCheckJs.Models.HMO
+
+@{
+    ViewData["Title"] = Model.Name.ToLower().Humanize(LetterCasing.Title);
+}
+
+<h4 class="text-center">@Model.Name.ToLower().Humanize(LetterCasing.Title)</h4>
+<hr />
+<div class="offset-3 col-6">
+    <div class="card">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd class="col-sm-8">
+                    <span>@Model.Name</span>
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.SignatoryName)
+                </dt>
+                <dd class="col-sm-8">
+                    <span>@Model.SignatoryName.ToLower().Humanize(LetterCasing.Title)</span>
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.SignatoryDesignation)
+                </dt>
+                <dd class="col-sm-8">
+                    <span>@Model.SignatoryDesignation.ToLower().Humanize(LetterCasing.Title)</span>
+                </dd>
+                <dt class="col-sm-4">
+                    <span>Signature Image</span>
+                </dt>
+                <dd class="col-sm-8">
+                    @{
+                        var spath = "/image/signature/" + Model.Guid.ToString();
+                    }
+                    <img src="@spath" class="img-thumbnail" />
+                </dd>
+                <dt class="col-sm-4">
+                    <span>Logo Image</span>
+                </dt>
+                <dd class="col-sm-8">
+                    @{
+                        var lpath = "/image/logo/" + Model.Guid.ToString();
+                    }
+                    <img src="@lpath" class="img-thumbnail" />
+                </dd>
+
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.AuthCodeTemplate)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.AuthCodeTemplate)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.GenerateAuthCodeOnSignUpComplete)
+                </dt>
+                <dd class="col-sm-8">
+                    @{
+                        var genoncomplete = !Model.GenerateAuthCodeOnSignUpComplete.HasValue ? "NO" : (Model.GenerateAuthCodeOnSignUpComplete.Value ? "YES" : "NO");
+                    }
+                    <span>@genoncomplete</span>
+                    @*@Html.DisplayFor(model => model.GenerateAuthCodeOnSignUpComplete)*@
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.EmailsToCC)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.EmailsToCC)
+                </dd>
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.PinRegex)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.PinRegex)
+                </dd>
+
+                <dt class="col-sm-4">
+                    @Html.DisplayNameFor(model => model.DateCreated)
+                </dt>
+                <dd class="col-sm-8">
+                    @Html.DisplayFor(model => model.DateCreated)
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer">
+            <div class="pull-right">
+                <a asp-action="Index">Back to List</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>

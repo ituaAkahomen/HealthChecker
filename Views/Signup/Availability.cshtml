@@ -1,0 +1,44 @@
+﻿@using Microsoft.Extensions.Options;
+@using reCAPTCHA.AspNetCore;
+
+@inject IOptions<RecaptchaSettings> RecaptchaSettings
+
+@{
+    Layout = "_AnonLayout";
+    ViewData["Title"] = "Schedule a Date";
+}
+
+<div class="row h-100">
+    <div class="col-12 my-auto">
+        <div class="masthead-content text-white py-5 py-md-0">
+            <h3 class="mb-3 text-center">Schedule your Appointment</h3>
+            <br />
+            <form method="post" asp-action="availability">
+@*                @Html.Recaptcha(RecaptchaSettings?.Value)
+*@                <div class="form-group">
+                    <input type="text" name="id" class="form-control-lg"
+                           placeholder="Primary" />
+                </div>
+                <br />
+                <div class="form-group">
+                    <input type="text" name="pin" class="form-control-lg"
+                           placeholder="Alternative" />
+                </div>
+                <br />
+                <div class="form-group">
+                    <button class="btn btn-lg btn-light" formaction="availabilityback">
+                        <i class="fa fa-arrow-left"></i>
+                        &nbsp;&nbsp;
+                        Previous
+                    </button>
+                    <button class="btn btn-lg btn-dark pull-right">
+                        Continue
+                        &nbsp;&nbsp;
+                        <i class="fa fa-arrow-right"></i>
+                    </button>
+                    <div class="clearfix"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

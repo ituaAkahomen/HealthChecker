@@ -1,0 +1,109 @@
+﻿@using Humanizer
+@model AnnualHealthCheckJs.Models.Service
+
+@{
+    ViewData["Title"] = "Create a new Service";
+}
+
+<h4 class="text-center">Create a new Service</h4>
+<hr />
+<div class="row">
+    <div class="offset-3 col-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label asp-for="Name" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="Gender" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            <select asp-for="Gender" asp-items="Html.GetEnumSelectList<GenderX>()" class="form-control">
+                                <option selected="selected" value="">-- Please select --</option>
+                            </select>
+                            <span asp-validation-for="Gender" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="GTE_Age" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            <input asp-for="GTE_Age" asp-items="" class="form-control" />
+                            <span asp-validation-for="GTE_Age" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="HMO" class="col-form-label col-3"></label>
+                        <div class="col-9">
+                            @*<select asp-for="HMOID" asp-items="@ViewBag.HMOs" class="form-control" />*@
+                            <select class="form-control" name="hmoId"
+                                    data-val-required="The HMO is required.">
+                                @{
+                                    var hmos = (SelectList)ViewBag.HMOs;
+                                    var hmo = hmos.FirstOrDefault().Value;
+                                }
+                                @foreach (var h in hmos)
+                                {
+                                    if (hmo == h.Value)
+                                    {
+                                        <option value="@h.Value" selected="selected">@h.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@h.Value">@h.Text</option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="HMOID" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <input type="submit" value="Save" class="btn btn-primary btn-sm" />
+                    <div class="pull-right">
+                        <a asp-action="Index">Back to List</a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript">
+
+        $(function () {
+
+            $("#stateddl").change(function () {
+                let selectedItem = $(this).val();
+                let locationddl = $("#locationddl");
+                let locProgress = $("#location-loading-progress");
+                locProgress.show();
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "/providers/statelocations",
+                    data: { "stateId": selectedItem },
+                    success: function (data) {
+                        locationddl.html('');
+                        locationddl.append('<option value="">-- Select a location --</option>');
+                        $.each(data.locations, function (id, option) {
+                            locationddl.append($('<option></option>').val(option.value).html(option.text));
+                        });
+                        locProgress.hide();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve locations.');
+                        locProgress.hide();
+                    }
+                });
+            });
+        });
+
+    </script>
+}

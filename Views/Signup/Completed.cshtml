@@ -1,0 +1,39 @@
+﻿@using Microsoft.Extensions.Options;
+@using reCAPTCHA.AspNetCore;
+@using Humanizer;
+
+@model LocationAndAvailabilityVM
+
+@inject IOptions<RecaptchaSettings> RecaptchaSettings
+
+@{
+    Layout = "_AnonLayout";
+    ViewData["Title"] = "Annual Checkup Completed";
+}
+
+<div class="row h-100">
+    <div class="col-12 my-auto">
+        <div class="row mb-2">
+            <div class="col-6 justify-content-start">
+                <img src="/image/Logo/@Model.hmoGuid" />
+            </div>
+            <div class="col-6 justify-content-end">
+                <img class="float-right mr-2" src="/image/unionlogo" />
+                <div class="clearfix"></div>
+            </div>
+            @*<div class="offset-md-5 col-7 justify-content-center">
+            <img src="/image/anchorhmologo" />
+        </div>*@
+        </div>
+        <div class="masthead-content text-white py-5 py-md-0">
+            <h2 class="mb-3 text-center">Your Annual Health checkup Completed</h2>
+            <br />
+            <p class="mb-5">
+                Dear @Model.SignUp.Enrollee.LastName.ToLower().Humanize(LetterCasing.Title) @Model.SignUp.Enrollee.OtherNames.ToLower().Humanize(LetterCasing.Title),
+            </p>
+            <p class="mb-5">
+                Your annual health check for @Model.Year.ToString() has been completed successfully.
+            </p>
+        </div>
+    </div>
+</div>

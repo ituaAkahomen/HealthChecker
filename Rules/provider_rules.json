@@ -1,0 +1,78 @@
+{
+  "Sheets": [
+    {
+      "SheetName": "Providers",
+      "HeaderRow": 0,
+      "Rows": [],
+      "Rules": {}
+    }
+  ],
+  "Rows": [
+    {
+      "ColumnName": "Name",
+      "UseSheetName": false,
+      "Constant": "",
+      "AttributeName": "Name",
+      "Type": "",
+      "Format": "",
+      "TypeMapper": "",
+      "ToUpper": true,
+      "ToLower": false,
+      "ToFirstUpper": false,
+      "IsRequired": true
+    },
+    {
+      "ColumnName": "Address",
+      "UseSheetName": false,
+      "Constant": "",
+      "AttributeName": "Address",
+      "Type": "",
+      "Format": "",
+      "TypeMapper": "",
+      "ToUpper": true,
+      "ToLower": false,
+      "ToFirstUpper": false,
+      "IsRequired": true
+    },
+    {
+      "ColumnName": "Location",
+      "UseSheetName": false,
+      "Constant": "",
+      "AttributeName": "Location",
+      "Type": "",
+      "Format": "",
+      "TypeMapper": "",
+      "ToUpper": true,
+      "ToLower": false,
+      "ToFirstUpper": false,
+      "IsRequired": true
+    },
+    {
+      "ColumnName": "State",
+      "UseSheetName": false,
+      "Constant": "",
+      "AttributeName": "State",
+      "Type": "",
+      "Format": "",
+      "TypeMapper": "",
+      "ToUpper": true,
+      "ToLower": false,
+      "ToFirstUpper": false,
+      "IsRequired": true
+    }
+  ],
+  "Rules": {
+    "Idempotency": [
+      {
+        "Operator": "",
+        "Attributes": []
+      }
+    ],
+    "Substitutes": [
+      {
+        "Function": "",
+        "Attribute": ""
+      }
+    ]
+  }
+}

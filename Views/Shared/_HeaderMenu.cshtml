@@ -1,0 +1,37 @@
+﻿@if (User.Identity.IsAuthenticated)
+{
+    if (User.IsInRole(Enum.GetName(typeof(ProfileTypes), ProfileTypes.ADMIN)))
+    {
+        <partial name="_HeaderMenuAdmin" />
+    }
+    else if (User.IsInRole(Enum.GetName(typeof(ProfileTypes), ProfileTypes.SU)))
+    {
+        <partial name="_HeaderMenuSU" />
+    }
+    else if (User.IsInRole(Enum.GetName(typeof(ProfileTypes), ProfileTypes.PROVIDER)))
+    {
+        <partial name="_HeaderMenuProvider" />
+    }
+    else if (User.IsInRole(Enum.GetName(typeof(ProfileTypes), ProfileTypes.HR)))
+    {
+        <partial name="_HeaderMenuHR" />
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </li>
+    }
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </li>
+}
